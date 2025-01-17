@@ -1,9 +1,10 @@
 <template>
     <nav>
         <ul>
-            <li><a href="#">Ver Libros</a></li>
-            <li><a href="#">Añadir Libro</a></li>
-            <li><a href="#">Acerca de...</a></li>
+            <router-link to="/" class="link"><b>VER LIBROS</b></router-link>
+            <router-link to="/addbook" class="link"><b>NUEVO LIBRO</b></router-link>
+            <router-link to="/cart" class="link"><b>VER CARRITO</b></router-link>
+            <router-link to="/about" class="link"><b>ACERCA DE...</b></router-link>
         </ul>
     </nav>
 </template>
@@ -12,4 +13,18 @@
 </script>
 
 <style scoped>
+
+.link {
+    margin-right: 20px;
+    font-size: 20px;
+    color: lime;
+    text-decoration: none;
+    
+}
+
+.link:hover {
+    color: gray;
+    text-decoration: underline;
+    transition: color 0.3s ease-in-out;
+}
 </style>

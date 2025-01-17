@@ -1,14 +1,15 @@
 <template>
     <div class="book">
-        <p>Libro: {{ book.id }}</p>
-        <p>{{ book.moduleCode }}</p>
-        <p>{{ book.publisher }}</p>
-        <p>Precio: {{ book.price }}</p>
-        <p>Páginas: {{ book.pages }}</p>
-        <p>Estado: {{ book.status }}</p>
-        <p v-if="!book.soldDate">En venta</p>
-        <p>Comentarios: {{ book.comments }}</p>
+        <p>Libro: <b>{{ book.id }}</b></p>
+        <p>Código de módulo: <b>{{ book.moduleCode }}</b></p>
+        <p>Editorial: <b>{{ book.publisher }}</b></p>
+        <p>Precio: <b>{{ book.price }}</b></p>
+        <p>Páginas: <b>{{ book.pages }}</b></p>
+        <p>Estado: <b>{{ book.status }}</b></p>
+        <p v-if="!book.soldDate"><b>En venta</b></p>
+        <p>Comentarios: <b>{{ book.comments }}</b></p>
         <button @click="$emit('deleteBook');">Borrar</button>
+        <button @click="$emit('editBook');">Editar</button>
     </div>
 </template>
 

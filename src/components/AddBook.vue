@@ -1,8 +1,9 @@
 <template>
 
     <form @submit.prevent="addBook">
-        
-        <br><h4>Añadir Libro</h4>
+
+        <br>
+        <h4 id="titulo">Añadir Libro</h4>
         <label for="bookId">Id: </label>
         <input id="bookId" v-model="newBookId" required /><br>
 
@@ -38,8 +39,10 @@
         <label for="comments">Comentarios: </label>
         <textarea name="comments" id="comments" v-model="newBookComments"></textarea><br>
 
-        <button type="submit">Añadir</button>
-        <button @click="resetFields">Reset</button>
+        <div id="botones">
+            <button type="submit" id="anyadir">Añadir</button>
+            <button id="resetButton" @click="resetFields">Reset</button>
+        </div>
 
     </form>
 
@@ -47,73 +50,148 @@
 
 <script setup>
 
-    import { ref, onMounted } from 'vue';
-    import axios from 'axios';
-    import { useStoreDeMensajes } from '../stores/messages';
+import { ref, onMounted, nextTick, watch } from 'vue';
+import axios from 'axios';
+import { useStoreDeMensajes } from '../stores/messages';
+import { useRoute } from 'vue-router';
 
-    const newBookId = ref("");
-    const newBookModule = ref("");
-    const newBookPublisher = ref("");
-    const newBookPrice = ref("");
-    const newBookPages = ref("");
-    const newBookStatus = ref("");
-    const newBookComments = ref("");
 
-    const options = ref([]);
-    const messages = useStoreDeMensajes();
+const newBookId = ref("");
+const newBookModule = ref("");
+const newBookPublisher = ref("");
+const newBookPrice = ref("");
+const newBookPages = ref("");
+const newBookStatus = ref("");
+const newBookComments = ref("");
 
-    async function addBook() {
-        
-        try {
+const options = ref([]);
+const messages = useStoreDeMensajes();
 
-            await axios.post('http://localhost:3000/books', {
-                
-                moduleCode: newBookModule.value,
-                publisher: newBookPublisher.value,
-                price: newBookPrice.value,
-                pages: newBookPages.value,
-                status: newBookStatus.value,
-                comments: newBookComments.value,
-                id: newBookId.value
-            });
+async function addBook() {
 
-            messages.addMessage('Libro añadido!');
-            setTimeout(() => {messages.removeMessage(0)}, 3000);
-        } catch (error) {
+    try {
 
-            messages.addMessage('Error al añadir libro: ' + error);
-            setTimeout(() => {messages.removeMessage(0)}, 3000);
-            console.error('Error al añadir:', error);
-        }
+        await axios.post('http://localhost:3000/books', {
+
+            moduleCode: newBookModule.value,
+            publisher: newBookPublisher.value,
+            price: newBookPrice.value,
+            pages: newBookPages.value,
+            status: newBookStatus.value,
+            comments: newBookComments.value,
+            id: newBookId.value
+        });
+
+        messages.addMessage('Libro añadido!');
+        setTimeout(() => { messages.removeMessage(0) }, 3000);
+    } catch (error) {
+
+        messages.addMessage('Error al añadir libro: ' + error);
+        setTimeout(() => { messages.removeMessage(0) }, 3000);
+        console.error('Error al añadir:', error);
     }
-    
+}
 
-    async function fetchOptions() {
-        
-        try {
+
+async function fetchOptions() {
+
+    try {
+
+        const response = await axios.get('http://localhost:3000/modules');
+        options.value = response.data;
+    } catch (error) {
+
+        messages.addMessage('Error en los modulos:' + error);
+        setTimeout(() => { messages.removeMessage(0) }, 3000);
+        console.error('Error en los modulos:', error);
+    }
+}
+
+function resetFields() {
+
+    newBookId.value = "";
+    newBookModule.value = "";
+    newBookPublisher.value = "";
+    newBookPrice.value = "";
+    newBookPages.value = "";
+    newBookStatus.value = "";
+    newBookComments.value = "";
+}
+
+const route = useRoute();
+
+
+watch(
+    route,
+    async (to, from) => {
+
+        //nextTick para asegurarse que los cambios en el DOM se han completado.
+        nextTick(async () => {
+
+            //Elementos del formulario
+            const titulo = document.getElementById('titulo');
+            const idField = document.getElementById('bookId');
+            const statusField = document.querySelectorAll('input[name="bookStatus"]');
+            const botonEnviar = document.getElementById('anyadir');
+            const botonReset = document.getElementById('resetButton');
+            const botonEditar = document.createElement('button');
+            botonEditar.innerText = 'Editar';
             
-            const response = await axios.get('http://localhost:3000/modules');
-            options.value = response.data;
-        } catch (error) {
-            
-            messages.addMessage('Error en los modulos:' + error);
-            setTimeout(() => {messages.removeMessage(0)}, 3000);
-            console.error('Error en los modulos:', error);
-        }
-    }
 
-    function resetFields() {
-        
-        newBookId.value = "";
-        newBookModule.value = "";
-        newBookPublisher.value = "";
-        newBookPrice.value = "";
-        newBookPages.value = "";
-        newBookStatus.value = "";
-        newBookComments.value = "";
-    }
+            if (route.query.id) {
 
-    onMounted(fetchOptions);
+                botonEditar.addEventListener('click', editar(route.query.id));
+                const libro = await getBook(route.query.id);
+
+                titulo.textContent = 'Editar Libro';
+
+                idField.setAttribute('disabled', 'true');
+
+                newBookId.value = route.query.id;
+                newBookModule.value = libro.moduleCode;
+                newBookPublisher.value = libro.publisher;
+                newBookPrice.value = libro.price;
+                newBookPages.value = libro.pages;
+                newBookComments.value = libro.comments;
+
+                Array.from(statusField).forEach((status) => {
+
+                    if (status.value === libro.status) {
+                        status.checked = true;
+                    }
+                });
+
+                botonEnviar.remove();
+                botonReset.parentNode.insertBefore(botonEditar, botonReset);
+            }
+
+        });
+
+    },
+    { immediate: true }
+);
+
+async function getBook(id) {
+
+    const libro = await axios.get(`http://localhost:3000/books/${id}`);
+    return libro.data;
+}
+
+async function editar(id) {
+
+    const libro = axios.patch(`http://localhost:3000/books/${id}`, {
+
+        moduleCode: newBookModule.value,
+        publisher: newBookPublisher.value,
+        price: newBookPrice.value,
+        pages: newBookPages.value,
+        status: newBookStatus.value,
+        comments: newBookComments.value,
+        id: newBookId.value
+    })
+}
+
+onMounted(fetchOptions);
 
 
 </script>
@@ -122,4 +200,4 @@
 select {
     width: 250px;
 }
-</style>    
+</style>

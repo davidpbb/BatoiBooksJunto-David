@@ -2,7 +2,7 @@
     <div>
         <ul>
             <li v-for="book in books" :key="book.id">
-                <BookItem :book="book" @deleteBook="deleteBook(book.id)"/>
+                <BookItem :book="book" @deleteBook="deleteBook(book.id)" @editBook="editBook(book.id)"/>
             </li>
         </ul>
         <p>Total de libros: {{ totalBooks }}</p>
@@ -11,10 +11,13 @@
 
 <script setup>
 
-    import { ref, computed, onMounted } from 'vue';
+    import { ref, computed, onMounted, nextTick } from 'vue';
     import axios from 'axios';
     import BookItem from './BookItem.vue';
+    import { useRouter } from 'vue-router';
     
+    const router = useRouter();
+
     const books = ref([]);
     const totalBooks = computed(() => books.value.length);
     
@@ -40,6 +43,17 @@
         
             console.error('Error al borrar: ', error);
         }
+    }
+
+    function editBook(id) {
+
+
+        router.push({
+
+            name: 'AddBook',
+            query: { id }
+        });
+
     }
     
     onMounted(fetchBooks);

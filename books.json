@@ -2128,12 +2128,12 @@
   "books": [
     {
       "id": "67",
-      "moduleCode": "0011",
-      "publisher": "sdf",
-      "price": "2345",
-      "pages": "345",
-      "status": "good",
-      "comments": "sdfgsdfg"
+      "moduleCode": "0012",
+      "publisher": "pruebaaaa",
+      "price": "123",
+      "pages": "123",
+      "status": "new",
+      "comments": "asdfsdf"
     }
   ]
 }
