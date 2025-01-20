@@ -136,11 +136,12 @@ watch(
             const botonReset = document.getElementById('resetButton');
             const botonEditar = document.createElement('button');
             botonEditar.innerText = 'Editar';
+            botonEditar.setAttribute('onclick', 'editar()');
             
 
             if (route.query.id) {
 
-                botonEditar.addEventListener('click', editar(route.query.id));
+                // botonEditar.addEventListener('click', editar(route.query.id));
                 const libro = await getBook(route.query.id);
 
                 titulo.textContent = 'Editar Libro';
@@ -179,6 +180,7 @@ async function getBook(id) {
 
 async function editar(id) {
 
+    console.log('editado');
     const libro = axios.patch(`http://localhost:3000/books/${id}`, {
 
         moduleCode: newBookModule.value,
