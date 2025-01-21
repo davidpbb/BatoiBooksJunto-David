@@ -47,7 +47,6 @@
 
     function editBook(id) {
 
-
         router.push({
 
             name: 'AddBook',

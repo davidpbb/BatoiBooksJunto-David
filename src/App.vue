@@ -1,7 +1,7 @@
 <template>
     <div id="app">
 
-        <img src="../public/logoBatoi.png">
+        <img src="/logoBatoi.png">
         <AppMenu />
         <AppMessages />
         <main>
