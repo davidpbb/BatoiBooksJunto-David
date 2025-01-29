@@ -2127,40 +2127,22 @@
   ],
   "books": [
     {
-      "userId": 3,
-      "moduleCode": "5021",
-      "publisher": "McGraw-",
-      "price": "55",
-      "pages": "33",
-      "status": "good",
-      "photo": "",
-      "comments": "bueno",
-      "soldDate": "",
-      "id": "6"
+      "id": "6",
+      "moduleCode": "0012",
+      "publisher": "prueba",
+      "price": "2222",
+      "pages": "4444",
+      "status": "used",
+      "comments": "prueba"
     },
     {
-      "userId": 4,
-      "moduleCode": "5025",
-      "publisher": "Apunts",
-      "price": 35,
-      "pages": 73,
+      "id": "44444",
+      "moduleCode": "0013",
+      "publisher": "prueba",
+      "price": "234234",
+      "pages": "333",
       "status": "good",
-      "photo": "",
-      "comments": "",
-      "soldDate": "",
-      "id": "9"
-    },
-    {
-      "userId": 5,
-      "moduleCode": "5021",
-      "publisher": "Apunts",
-      "price": 5,
-      "pages": 57,
-      "status": "good",
-      "photo": "",
-      "comments": "",
-      "soldDate": "",
-      "id": "10"
+      "comments": "adfasdf"
     }
   ]
 }
